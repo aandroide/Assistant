@@ -4,6 +4,11 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
+    paths-ignore:
+      - 'apk/**'
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -34,3 +39,13 @@ jobs:
         with:
           name: S4MeAssistant
           path: S4MeAssistant.apk
+
+      - name: Salva l'APK nella cartella apk del repository
+        run: |
+          mkdir -p apk
+          cp S4MeAssistant.apk apk/S4MeAssistant.apk
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add apk/S4MeAssistant.apk
+          git commit -m "APK aggiornato" || echo "Nessuna modifica da salvare"
+          git push
