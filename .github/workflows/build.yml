@@ -49,3 +49,13 @@ jobs:
           git add apk/S4MeAssistant.apk
           git commit -m "APK aggiornato" || echo "Nessuna modifica da salvare"
           git push
+
+      - name: Pubblica l'APK nella release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete latest --yes --cleanup-tag || true
+          gh release create latest S4MeAssistant.apk \
+            --title "S4Me Assistant" \
+            --notes "Ultima versione di S4Me Assistant. Un unico APK per telefoni a 32 e 64 bit." \
+            --target "${{ github.sha }}" --latest
