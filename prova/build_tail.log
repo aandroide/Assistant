@@ -25,7 +25,9 @@ Warning: SDK processing. This version only understands SDK XML versions up to 3 
 > Task :app:checkReleaseDuplicateClasses
 > Task :app:processReleaseJavaRes NO-SOURCE
 > Task :app:mergeReleaseArtProfile
+> Task :app:mergeReleaseShaders
 > Task :app:processReleaseResources
+> Task :app:compileReleaseShaders NO-SOURCE
 > Task :app:mergeReleaseJavaResource
 
 > Task :app:compileReleaseJavaWithJavac
@@ -35,8 +37,6 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:generateReleaseLintVitalReportModel
 > Task :app:expandReleaseArtProfileWildcards
 > Task :app:mergeReleaseGeneratedProguardFiles
-> Task :app:mergeReleaseShaders
-> Task :app:compileReleaseShaders NO-SOURCE
 > Task :app:generateReleaseAssets UP-TO-DATE
 > Task :app:mergeReleaseAssets
 > Task :app:compressReleaseAssets
@@ -57,7 +57,7 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:packageRelease
 > Task :app:createReleaseApkListingFileRedirect
 > Task :app:assembleRelease
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_3-1795647638278.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_3-1795648183578.json
 
-BUILD SUCCESSFUL in 26s
+BUILD SUCCESSFUL in 30s
 41 actionable tasks: 41 executed
