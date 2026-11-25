@@ -1,13 +1,5 @@
-Tentativo 1: creo la release
-HTTP 502: Server Error (https://api.github.com/repos/aandroide/Assistant/releases)
-Tentativo 2: creo la release
-HTTP 500 (https://api.github.com/repos/aandroide/Assistant/releases)
-Tentativo 3: creo la release
-HTTP 500 (https://api.github.com/repos/aandroide/Assistant/releases/458338533)
-cleaning up draft failed: HTTP 500 (https://api.github.com/repos/aandroide/Assistant/releases/458338533)
-Tentativo 4: release esistente, sostituisco i file
-HTTP 500 (https://api.github.com/repos/aandroide/Assistant/releases/assets/792196853)
-Tentativo 5: release esistente, sostituisco i file
-HTTP 500 (https://uploads.github.com/repos/aandroide/Assistant/releases/458338533/assets?label=&name=update.json)
-Tentativo 6: release esistente, sostituisco i file
+Tentativo 1: release esistente, sostituisco i file
 HTTP 500 (https://api.github.com/repos/aandroide/Assistant/releases/assets/792198598)
+Tentativo 2: release esistente, sostituisco i file
+HTTP 500 (https://api.github.com/repos/aandroide/Assistant/releases/assets/792200465)
+Tentativo 3: release esistente, sostituisco i file
