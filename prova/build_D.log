@@ -3,8 +3,8 @@ Daemon will be stopped at the end of the build
 Warning: SDK processing. This version only understands SDK XML versions up to 3 but an SDK XML file of version 4 was encountered. This can happen if you use versions of Android Studio and the command-line tools that were released at different times.
 > Task :app:preBuild UP-TO-DATE
 > Task :app:preReleaseBuild UP-TO-DATE
-> Task :app:javaPreCompileRelease
 > Task :app:checkReleaseAarMetadata
+> Task :app:javaPreCompileRelease
 > Task :app:generateReleaseResValues
 > Task :app:mapReleaseSourceSetPaths
 > Task :app:generateReleaseResources
@@ -20,9 +20,9 @@ Warning: SDK processing. This version only understands SDK XML versions up to 3 
 > Task :app:mergeReleaseNativeLibs NO-SOURCE
 > Task :app:stripReleaseDebugSymbols NO-SOURCE
 > Task :app:extractReleaseNativeSymbolTables NO-SOURCE
+> Task :app:processReleaseManifestForPackage
 > Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE
 > Task :app:checkReleaseDuplicateClasses
-> Task :app:processReleaseManifestForPackage
 > Task :app:mergeReleaseArtProfile
 > Task :app:processReleaseJavaRes NO-SOURCE
 > Task :app:mergeReleaseShaders
@@ -31,9 +31,9 @@ Warning: SDK processing. This version only understands SDK XML versions up to 3 
 > Task :app:mergeReleaseAssets
 > Task :app:compressReleaseAssets
 > Task :app:processApplicationManifestReleaseForBundle
-> Task :app:mergeReleaseJavaResource
 > Task :app:collectReleaseDependencies
 > Task :app:processReleaseResources
+> Task :app:mergeReleaseJavaResource
 > Task :app:sdkReleaseDependencyData
 
 > Task :app:compileReleaseJavaWithJavac
@@ -49,15 +49,15 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:bundleReleaseResources
 > Task :app:minifyReleaseWithR8
 > Task :app:compileReleaseArtProfile
-> Task :app:lintVitalAnalyzeRelease
 > Task :app:shrinkReleaseRes
+> Task :app:optimizeReleaseResources
+> Task :app:lintVitalAnalyzeRelease
 > Task :app:lintVitalReportRelease
 > Task :app:lintVitalRelease
-> Task :app:optimizeReleaseResources
 > Task :app:packageRelease
 > Task :app:createReleaseApkListingFileRedirect
 > Task :app:assembleRelease
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_3-1795646408264.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_3-1795646492060.json
 
-BUILD SUCCESSFUL in 27s
+BUILD SUCCESSFUL in 20s
 41 actionable tasks: 41 executed
