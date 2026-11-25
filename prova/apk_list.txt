@@ -1,0 +1,6 @@
+total 161428
+drwxr-xr-x 2 runner runner     4096 Nov 25 14:02 .
+drwxr-xr-x 3 runner runner     4096 Nov 25 14:02 ..
+-rw-r--r-- 1 runner runner 85415868 Nov 25 14:02 app-arm64-v8a-debug.apk
+-rw-r--r-- 1 runner runner 79869506 Nov 25 14:02 app-armeabi-v7a-debug.apk
+-rw-r--r-- 1 runner runner      754 Nov 25 14:02 output-metadata.json
