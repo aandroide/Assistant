@@ -62,23 +62,17 @@ jobs:
           json.dump(m, open("update.json", "w"), indent=2)
           print(open("update.json").read())
           PY
-      - name: Compila la variante P firmata con apksigner
+      - name: Prepara Lume TV ririfirmato con la chiave di prova
         run: |
-          mkdir -p out
-          unzip -q var_P.zip -d vsrc
-          ( cd vsrc/P && gradle assembleRelease --no-daemon -Pvc=$((2000 + ${{ github.run_number }} * 10 + 1)) -Pvn=2.0.1 2>&1 | tee ../../build_P.log ; exit ${PIPESTATUS[0]} )
-          UNSIGNED=$(ls vsrc/P/app/build/outputs/apk/release/*.apk | head -1)
-          echo "APK non firmato: $UNSIGNED"
+          mkdir -p out q
+          curl -sSL -o q/lume.apk https://github.com/pjor94/LumeTV/releases/download/v0.12.1/LumeTV-0.12.1.apk
+          ls -la q/lume.apk
           BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
-          echo "build-tools: $BT"
-          if [ -n "$S4ME_KEYSTORE" ]; then
-            KS="$S4ME_KEYSTORE"; AL="$S4ME_KEY_ALIAS"; SP="$S4ME_STORE_PASS"; KP="$S4ME_KEY_PASS"
-          else
-            KS=vsrc/P/app/test.keystore; AL=provas4me; SP=provas4me; KP=provas4me
-          fi
-          $BT/zipalign -f -p 4 "$UNSIGNED" aligned.apk
-          $BT/apksigner sign --ks "$KS" --ks-key-alias "$AL" --ks-pass pass:"$SP" --key-pass pass:"$KP" --out out/S4MeAssistant_P.apk aligned.apk
-          $BT/apksigner verify --verbose out/S4MeAssistant_P.apk | head -8 | tee -a build_P.log
+          zip -q -d q/lume.apk 'META-INF/LUMETV.SF' 'META-INF/LUMETV.RSA' 'META-INF/MANIFEST.MF'
+          $BT/zipalign -f -p 4 q/lume.apk q/aligned.apk
+          unzip -q var_P.zip -d vsrc
+          $BT/apksigner sign --ks vsrc/P/app/test.keystore --ks-key-alias provas4me --ks-pass pass:provas4me --key-pass pass:provas4me --out out/Lume_ririfirmato.apk q/aligned.apk
+          $BT/apksigner verify --print-certs out/Lume_ririfirmato.apk | head -4 | tee build_Q.log
       - name: Pubblica la release di prova
         env:
           GH_TOKEN: ${{ github.token }}
@@ -112,7 +106,7 @@ jobs:
           mkdir -p prova
           cp S4MeAssistant.apk update.json release.log prova/ || true
           cp out/*.apk prova/ || true
-          tail -c 20000 build_P.log > prova/build_P.log || true
+          tail -c 20000 build_Q.log > prova/build_Q.log || true
           tail -c 100000 build.log > prova/build_tail.log || true
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
