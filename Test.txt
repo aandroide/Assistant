@@ -2,3 +2,4 @@ test
 Ramo di prova per l'aggiornamento automatico
 verifica firma 1795631383
 seconda prova firma vera 1795631577
+prova aggiornamento 1.3.9
