@@ -66,21 +66,22 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          set +e
-          {
+          ok=1
+          : > release.log
+          for i in 1 2 3 4 5 6; do
             if gh release view prova-update >/dev/null 2>&1; then
-              echo "Release esistente: sostituisco i file"
-              gh release upload prova-update S4MeAssistant.apk update.json --clobber
+              echo "Tentativo $i: release esistente, sostituisco i file" >> release.log
+              gh release upload prova-update S4MeAssistant.apk update.json --clobber >> release.log 2>&1 && { ok=0; break; }
             else
-              echo "Creo la release"
+              echo "Tentativo $i: creo la release" >> release.log
               gh release create prova-update S4MeAssistant.apk update.json \
                 --title "Prova aggiornamento" --notes "Release di prova per l'aggiornamento automatico" \
-                --prerelease --target "${{ github.sha }}"
+                --prerelease --target "${{ github.sha }}" >> release.log 2>&1 && { ok=0; break; }
             fi
-            echo "esito=$?"
-          } > release.log 2>&1
+            sleep 20
+          done
           cat release.log
-          grep -q "esito=0" release.log
+          exit $ok
       - name: Salva APK e log nel ramo di prova
         if: always()
         run: |
