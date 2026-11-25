@@ -1,0 +1,27 @@
+name: Prova APK
+
+on:
+  push:
+    branches: [prova-ipv4]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: unzip -q S4MeAssistant_v1.zip -d src
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.2
+      - name: Compila l'APK
+        working-directory: src/S4MeAssistant
+        run: gradle assembleDebug --no-daemon
+      - run: cp src/S4MeAssistant/app/build/outputs/apk/debug/app-debug.apk S4MeAssistant_prova.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: S4MeAssistant_prova
+          path: S4MeAssistant_prova.apk
