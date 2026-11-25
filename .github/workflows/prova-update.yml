@@ -67,9 +67,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release delete prova-update --yes --cleanup-tag || true
-          gh release create prova-update S4MeAssistant.apk update.json \
-            --title "Prova aggiornamento" --notes "Release di prova per l'aggiornamento automatico" \
-            --prerelease --target "${{ github.sha }}"
+          sleep 8
+          for i in 1 2 3; do
+            gh release create prova-update S4MeAssistant.apk update.json \
+              --title "Prova aggiornamento" --notes "Release di prova per l'aggiornamento automatico" \
+              --prerelease --target "${{ github.sha }}" && break
+            echo "Tentativo $i non riuscito, riprovo"
+            gh release delete prova-update --yes --cleanup-tag || true
+            sleep 10
+          done
       - name: Salva APK e log nel ramo di prova
         if: always()
         run: |
