@@ -36,20 +36,23 @@ jobs:
           else
             echo "Firma con la chiave di prova"
           fi
-      - name: Compila l'APK firmato
-        working-directory: src/S4MeAssistant
+      - name: Compila le varianti D E F
         run: |
-          VC=$((500 + ${{ github.run_number }}))
-          gradle assembleRelease --no-daemon -Pvc=$VC -Pvn=1.5.${{ github.run_number }} 2>&1 | tee ../../build.log
-          exit ${PIPESTATUS[0]}
-      - name: Copia APK
-        run: cp src/S4MeAssistant/app/build/outputs/apk/release/app-release.apk S4MeAssistant.apk
+          python3 variants.py src/S4MeAssistant
+          mkdir -p out
+          i=0
+          for n in D E F; do
+            i=$((i+1))
+            VC=$((600 + ${{ github.run_number }} * 10 + i))
+            ( cd var_$n && gradle assembleRelease --no-daemon -Pvc=$VC -Pvn=1.6.$i 2>&1 | tee ../build_$n.log ; exit ${PIPESTATUS[0]} )
+            cp var_$n/app/build/outputs/apk/release/app-release.apk out/S4MeAssistant_$n.apk
+          done
       - name: Salva APK e log nel ramo di prova
         if: always()
         run: |
           mkdir -p prova
-          cp S4MeAssistant.apk prova/S4MeAssistant_C_nuovo_id.apk || true
-          tail -c 100000 build.log > prova/build_tail.log || true
+          cp out/*.apk prova/ || true
+          for n in D E F; do tail -c 20000 build_$n.log > prova/build_$n.log || true; done
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
           git add prova
