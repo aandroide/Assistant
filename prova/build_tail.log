@@ -9,54 +9,76 @@ Warning: SDK processing. This version only understands SDK XML versions up to 3 
 > Task :app:mapReleaseSourceSetPaths
 > Task :app:generateReleaseResources
 > Task :app:packageReleaseResources
-> Task :app:mergeReleaseResources
 > Task :app:createReleaseCompatibleScreenManifests
 > Task :app:extractDeepLinksRelease
 > Task :app:parseReleaseLocalResources
+> Task :app:mergeReleaseResources
 > Task :app:processReleaseMainManifest
 > Task :app:processReleaseManifest
 > Task :app:extractProguardFiles
 > Task :app:mergeReleaseJniLibFolders
 > Task :app:mergeReleaseNativeLibs NO-SOURCE
-> Task :app:processReleaseManifestForPackage
 > Task :app:stripReleaseDebugSymbols NO-SOURCE
 > Task :app:extractReleaseNativeSymbolTables NO-SOURCE
 > Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE
 > Task :app:checkReleaseDuplicateClasses
-> Task :app:processReleaseResources
-> Task :app:desugarReleaseFileDependencies
-
-> Task :app:compileReleaseJavaWithJavac
-Note: Some input files use or override a deprecated API.
-Note: Recompile with -Xlint:deprecation for details.
-
-> Task :app:generateReleaseLintVitalReportModel
-> Task :app:dexBuilderRelease
-> Task :app:lintVitalAnalyzeRelease
-> Task :app:lintVitalReportRelease
+> Task :app:processReleaseJavaRes NO-SOURCE
 > Task :app:mergeReleaseArtProfile
-> Task :app:lintVitalRelease
-> Task :app:mergeReleaseGlobalSynthetics
+> Task :app:processReleaseManifestForPackage
 > Task :app:mergeReleaseShaders
 > Task :app:compileReleaseShaders NO-SOURCE
 > Task :app:generateReleaseAssets UP-TO-DATE
 > Task :app:mergeReleaseAssets
 > Task :app:compressReleaseAssets
-> Task :app:processReleaseJavaRes NO-SOURCE
+> Task :app:processApplicationManifestReleaseForBundle
 > Task :app:collectReleaseDependencies
-> Task :app:sdkReleaseDependencyData
-> Task :app:validateSigningRelease
-> Task :app:writeReleaseAppMetadata
-> Task :app:writeReleaseSigningConfigVersions
-> Task :app:optimizeReleaseResources
 > Task :app:mergeReleaseJavaResource
-> Task :app:mergeExtDexRelease
-> Task :app:mergeDexRelease
-> Task :app:compileReleaseArtProfile
-> Task :app:packageRelease
-> Task :app:createReleaseApkListingFileRedirect
-> Task :app:assembleRelease
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_3-1795632559163.json
+> Task :app:sdkReleaseDependencyData
+> Task :app:processReleaseResources
+> Task :app:validateSigningRelease
 
-BUILD SUCCESSFUL in 43s
-40 actionable tasks: 40 executed
+> Task :app:compileReleaseJavaWithJavac FAILED
+/home/runner/work/Assistant/Assistant/src/S4MeAssistant/app/src/main/java/com/s4me/assistant/MainActivity.java:42: error: cannot find symbol
+            if (!updateBusy && pendingApk == null && waitingPermission == null) checkUpdate(false);
+                                                                                ^
+  symbol: method checkUpdate(boolean)
+/home/runner/work/Assistant/Assistant/src/S4MeAssistant/app/src/main/java/com/s4me/assistant/MainActivity.java:89: error: cannot find symbol
+                    installPending();
+                    ^
+  symbol: method installPending()
+/home/runner/work/Assistant/Assistant/src/S4MeAssistant/app/src/main/java/com/s4me/assistant/MainActivity.java:91: error: cannot find symbol
+                    checkUpdate(true);
+                    ^
+  symbol: method checkUpdate(boolean)
+/home/runner/work/Assistant/Assistant/src/S4MeAssistant/app/src/main/java/com/s4me/assistant/MainActivity.java:121: error: cannot find symbol
+        checkUpdate(false);
+        ^
+  symbol:   method checkUpdate(boolean)
+  location: class MainActivity
+/home/runner/work/Assistant/Assistant/src/S4MeAssistant/app/src/main/java/com/s4me/assistant/MainActivity.java:152: error: cannot find symbol
+            downloadAndInstall(w);
+            ^
+  symbol:   method downloadAndInstall(Info)
+  location: class MainActivity
+/home/runner/work/Assistant/Assistant/src/S4MeAssistant/app/src/main/java/com/s4me/assistant/MainActivity.java:155: error: cannot find symbol
+            installPending();
+            ^
+  symbol:   method installPending()
+  location: class MainActivity
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+6 errors
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_3-1795647010936.json
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileReleaseJavaWithJavac'.
+> Compilation failed; see the compiler error output for details.
+
+* Try:
+> Run with --info option to get more log output.
+> Run with --scan to get full insights.
+
+BUILD FAILED in 10s
+26 actionable tasks: 26 executed
