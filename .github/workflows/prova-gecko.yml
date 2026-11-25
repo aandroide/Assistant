@@ -1,0 +1,46 @@
+name: Prova Gecko
+
+on:
+  push:
+    branches: [prova-gecko]
+    paths-ignore:
+      - 'prova/**'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: unzip -q S4MeAssistant_v1.zip -d src
+      - name: Versione GeckoView
+        run: |
+          curl -s https://maven.mozilla.org/maven2/org/mozilla/geckoview/geckoview/maven-metadata.xml -o meta.xml
+          V=$(grep -o '<release>[^<]*' meta.xml | sed 's/<release>//')
+          echo "GeckoView $V"
+          echo "$V" > gecko_version.txt
+          sed -i "s/GECKO_VERSION/$V/" src/S4MeAssistant/app/build.gradle
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.2
+      - name: Compila l'APK
+        working-directory: src/S4MeAssistant
+        run: gradle assembleDebug --no-daemon --stacktrace 2>&1 | tee ../../build.log; exit ${PIPESTATUS[0]}
+      - name: Salva APK e log nel ramo di prova
+        if: always()
+        run: |
+          mkdir -p prova
+          cp build.log gecko_version.txt prova/ || true
+          cp src/S4MeAssistant/app/build/outputs/apk/debug/app-debug.apk prova/S4MeAssistant_gecko.apk || true
+          tail -c 200000 prova/build.log > prova/build_tail.log; rm -f prova/build.log
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add prova
+          git commit -m "Esito build di prova" || true
+          git push
