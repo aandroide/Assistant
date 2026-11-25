@@ -25,12 +25,12 @@ Warning: SDK processing. This version only understands SDK XML versions up to 3 
 > Task :app:desugarReleaseFileDependencies
 > Task :app:mergeReleaseArtProfile
 > Task :app:mergeReleaseShaders
+> Task :app:processReleaseManifestForPackage
 > Task :app:compileReleaseShaders NO-SOURCE
 > Task :app:generateReleaseAssets UP-TO-DATE
 > Task :app:mergeReleaseAssets
 > Task :app:compressReleaseAssets
 > Task :app:processReleaseJavaRes NO-SOURCE
-> Task :app:processReleaseManifestForPackage
 > Task :app:processReleaseResources
 > Task :app:mergeReleaseJavaResource
 > Task :app:mergeExtDexRelease
@@ -56,7 +56,7 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:lintVitalReportRelease
 > Task :app:lintVitalRelease
 > Task :app:assembleRelease
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_3-1795620117878.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_3-1795622046811.json
 
-BUILD SUCCESSFUL in 40s
+BUILD SUCCESSFUL in 28s
 40 actionable tasks: 40 executed
