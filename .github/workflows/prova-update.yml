@@ -80,6 +80,13 @@ jobs:
             fi
             sleep 20
           done
+          if [ $ok -eq 0 ]; then
+            for i in 1 2 3 4 5 6; do
+              gh release edit prova-update --draft=false --prerelease >> release.log 2>&1 && break
+              echo "Pubblicazione, tentativo $i non riuscito" >> release.log
+              sleep 20
+            done
+          fi
           cat release.log
           exit $ok
       - name: Salva APK e log nel ramo di prova
