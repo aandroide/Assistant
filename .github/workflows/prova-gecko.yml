@@ -18,7 +18,8 @@ jobs:
       - name: Versione GeckoView
         run: |
           curl -s https://maven.mozilla.org/maven2/org/mozilla/geckoview/geckoview/maven-metadata.xml -o meta.xml
-          V=$(grep -o '<release>[^<]*' meta.xml | sed 's/<release>//')
+          V=$(grep -o '<version>128\.[^<]*' meta.xml | sed 's/<version>//' | sort -V | tail -1)
+          [ -z "$V" ] && V=$(grep -o '<version>12[0-9]\.[^<]*' meta.xml | sed 's/<version>//' | sort -V | tail -1)
           echo "GeckoView $V"
           echo "$V" > gecko_version.txt
           sed -i "s/GECKO_VERSION/$V/" src/S4MeAssistant/app/build.gradle
