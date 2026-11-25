@@ -1,8 +1,8 @@
-name: Prova aggiornamento
+name: Prova unificato
 
 on:
   push:
-    branches: [prova-update]
+    branches: [prova-unificato]
     paths-ignore:
       - 'prova/**'
 
@@ -39,8 +39,8 @@ jobs:
       - name: Compila l'APK firmato
         working-directory: src/S4MeAssistant
         run: |
-          VC=$((100 + ${{ github.run_number }}))
-          gradle assembleRelease --no-daemon -Pvc=$VC -Pvn=1.1.${{ github.run_number }} 2>&1 | tee ../../build.log
+          VC=$((1000 + ${{ github.run_number }}))
+          gradle assembleRelease --no-daemon -Pvc=$VC -Pvn=1.2.${{ github.run_number }} 2>&1 | tee ../../build.log
           exit ${PIPESTATUS[0]}
       - name: Manifest di aggiornamento
         run: |
@@ -53,8 +53,8 @@ jobs:
           m = {
             "schema": 1,
             "applicationId": "com.s4me.assistant",
-            "versionName": "1.1.${{ github.run_number }}",
-            "versionCode": 100 + ${{ github.run_number }},
+            "versionName": "1.2.${{ github.run_number }}",
+            "versionCode": 1000 + ${{ github.run_number }},
             "minSdk": 21,
             "apks": {"universal": {"name": "S4MeAssistant.apk", "size": len(data),
                                     "sha256": hashlib.sha256(data).hexdigest()}}
@@ -69,20 +69,20 @@ jobs:
           ok=1
           : > release.log
           for i in 1 2 3 4 5 6; do
-            if gh release view prova-update >/dev/null 2>&1; then
+            if gh release view unificato-prova >/dev/null 2>&1; then
               echo "Tentativo $i: release esistente, sostituisco i file" >> release.log
-              gh release upload prova-update S4MeAssistant.apk update.json --clobber >> release.log 2>&1 && { ok=0; break; }
+              gh release upload unificato-prova S4MeAssistant.apk update.json --clobber >> release.log 2>&1 && { ok=0; break; }
             else
               echo "Tentativo $i: creo la release" >> release.log
-              gh release create prova-update S4MeAssistant.apk update.json \
-                --title "Prova aggiornamento" --notes "Release di prova per l'aggiornamento automatico" \
+              gh release create unificato-prova S4MeAssistant.apk update.json \
+                --title "Prova unificato" --notes "Release di prova per l'aggiornamento automatico" \
                 --prerelease --target "${{ github.sha }}" >> release.log 2>&1 && { ok=0; break; }
             fi
             sleep 20
           done
           if [ $ok -eq 0 ]; then
             for i in 1 2 3 4 5 6; do
-              gh release edit prova-update --draft=false --prerelease >> release.log 2>&1 && break
+              gh release edit unificato-prova --draft=false --prerelease >> release.log 2>&1 && break
               echo "Pubblicazione, tentativo $i non riuscito" >> release.log
               sleep 20
             done
