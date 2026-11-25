@@ -38,8 +38,16 @@ jobs:
         run: |
           mkdir -p prova
           cp build.log gecko_version.txt prova/ || true
-          cp src/S4MeAssistant/app/build/outputs/apk/debug/app-debug.apk prova/S4MeAssistant_gecko.apk || true
           tail -c 200000 prova/build.log > prova/build_tail.log; rm -f prova/build.log
+          ls -la src/S4MeAssistant/app/build/outputs/apk/debug/ > prova/apk_list.txt || true
+          for f in src/S4MeAssistant/app/build/outputs/apk/debug/*.apk; do
+            n=$(basename "$f" .apk)
+            if [ "$(stat -c %s "$f")" -gt 95000000 ]; then
+              split -b 90m -d "$f" "prova/$n.apk.part"
+            else
+              cp "$f" "prova/$n.apk"
+            fi
+          done
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
           git add prova
