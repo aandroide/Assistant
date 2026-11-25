@@ -1,14 +1,14 @@
 {
   "schema": 1,
   "applicationId": "com.s4me.assistant",
-  "versionName": "1.1.10",
-  "versionCode": 110,
+  "versionName": "1.1.11",
+  "versionCode": 111,
   "minSdk": 21,
   "apks": {
     "universal": {
       "name": "S4MeAssistant.apk",
-      "size": 1124784,
-      "sha256": "f332139d5c7c685cd96f29dc3352000791b850cce8ce4519be10e68ef6664f0e"
+      "size": 1124795,
+      "sha256": "7772b80ceb0b50b26e829073b45991396a3d3bd45ef50b46bf30e04103066338"
     }
   }
 }

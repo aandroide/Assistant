@@ -19,21 +19,12 @@ Warning: SDK processing. This version only understands SDK XML versions up to 3 
 > Task :app:mergeReleaseJniLibFolders
 > Task :app:mergeReleaseNativeLibs NO-SOURCE
 > Task :app:stripReleaseDebugSymbols NO-SOURCE
+> Task :app:processReleaseManifestForPackage
 > Task :app:extractReleaseNativeSymbolTables NO-SOURCE
 > Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE
 > Task :app:checkReleaseDuplicateClasses
-> Task :app:desugarReleaseFileDependencies
-> Task :app:mergeReleaseArtProfile
-> Task :app:processReleaseManifestForPackage
-> Task :app:mergeReleaseShaders
-> Task :app:compileReleaseShaders NO-SOURCE
-> Task :app:generateReleaseAssets UP-TO-DATE
-> Task :app:mergeReleaseAssets
-> Task :app:compressReleaseAssets
-> Task :app:processReleaseJavaRes NO-SOURCE
 > Task :app:processReleaseResources
-> Task :app:mergeReleaseJavaResource
-> Task :app:mergeExtDexRelease
+> Task :app:desugarReleaseFileDependencies
 
 > Task :app:compileReleaseJavaWithJavac
 Note: Some input files use or override a deprecated API.
@@ -41,22 +32,31 @@ Note: Recompile with -Xlint:deprecation for details.
 
 > Task :app:generateReleaseLintVitalReportModel
 > Task :app:dexBuilderRelease
+> Task :app:lintVitalAnalyzeRelease
+> Task :app:mergeReleaseArtProfile
+> Task :app:lintVitalReportRelease
+> Task :app:lintVitalRelease
 > Task :app:mergeReleaseGlobalSynthetics
+> Task :app:mergeReleaseShaders
+> Task :app:compileReleaseShaders NO-SOURCE
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseAssets
+> Task :app:compressReleaseAssets
+> Task :app:processReleaseJavaRes NO-SOURCE
 > Task :app:collectReleaseDependencies
 > Task :app:sdkReleaseDependencyData
 > Task :app:validateSigningRelease
 > Task :app:writeReleaseAppMetadata
 > Task :app:writeReleaseSigningConfigVersions
 > Task :app:optimizeReleaseResources
+> Task :app:mergeReleaseJavaResource
+> Task :app:mergeExtDexRelease
 > Task :app:mergeDexRelease
 > Task :app:compileReleaseArtProfile
 > Task :app:packageRelease
 > Task :app:createReleaseApkListingFileRedirect
-> Task :app:lintVitalAnalyzeRelease
-> Task :app:lintVitalReportRelease
-> Task :app:lintVitalRelease
 > Task :app:assembleRelease
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_3-1795631408580.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_3-1795631603646.json
 
-BUILD SUCCESSFUL in 38s
+BUILD SUCCESSFUL in 34s
 40 actionable tasks: 40 executed
