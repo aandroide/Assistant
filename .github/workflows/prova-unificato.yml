@@ -36,25 +36,34 @@ jobs:
           else
             echo "Firma con la chiave di prova"
           fi
-      - name: Compila l'APK firmato
+      - name: Compila l'APK non firmato
         working-directory: src/S4MeAssistant
         run: |
-          VC=$((1000 + ${{ github.run_number }}))
-          gradle assembleRelease --no-daemon -Pvc=$VC -Pvn=1.2.${{ github.run_number }} 2>&1 | tee ../../build.log
+          VC=$((3000 + ${{ github.run_number }}))
+          gradle assembleRelease --no-daemon -Pvc=$VC -Pvn=1.3.${{ github.run_number }} 2>&1 | tee ../../build.log
           exit ${PIPESTATUS[0]}
+      - name: Allinea e firma con apksigner
+        run: |
+          UNSIGNED=$(ls src/S4MeAssistant/app/build/outputs/apk/release/*.apk | head -1)
+          BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
+          if [ -n "$S4ME_KEYSTORE" ]; then
+            KS="$S4ME_KEYSTORE"; AL="$S4ME_KEY_ALIAS"; SP="$S4ME_STORE_PASS"; KP="$S4ME_KEY_PASS"
+          else
+            KS=src/S4MeAssistant/app/test.keystore; AL=provas4me; SP=provas4me; KP=provas4me
+          fi
+          $BT/zipalign -f -p 4 "$UNSIGNED" aligned.apk
+          $BT/apksigner sign --ks "$KS" --ks-key-alias "$AL" --ks-pass pass:"$SP" --key-pass pass:"$KP" --out S4MeAssistant.apk aligned.apk
+          $BT/apksigner verify --verbose --print-certs S4MeAssistant.apk | head -12 | tee firma.log
       - name: Manifest di aggiornamento
         run: |
-          APK=src/S4MeAssistant/app/build/outputs/apk/release/app-release.apk
-          cp "$APK" S4MeAssistant.apk
           python3 - <<'PY'
-          import json, hashlib, os
-          run = int(os.environ.get("RUN", "0") or 0)
+          import json, hashlib
           data = open("S4MeAssistant.apk", "rb").read()
           m = {
             "schema": 1,
             "applicationId": "com.s4me.assistant",
-            "versionName": "1.2.${{ github.run_number }}",
-            "versionCode": 1000 + ${{ github.run_number }},
+            "versionName": "1.3.${{ github.run_number }}",
+            "versionCode": 3000 + ${{ github.run_number }},
             "minSdk": 21,
             "apks": {"universal": {"name": "S4MeAssistant.apk", "size": len(data),
                                     "sha256": hashlib.sha256(data).hexdigest()}}
@@ -62,17 +71,6 @@ jobs:
           json.dump(m, open("update.json", "w"), indent=2)
           print(open("update.json").read())
           PY
-      - name: Prepara Lume TV ririfirmato con la chiave di prova
-        run: |
-          mkdir -p out q
-          curl -sSL -o q/lume.apk https://github.com/pjor94/LumeTV/releases/download/v0.12.1/LumeTV-0.12.1.apk
-          ls -la q/lume.apk
-          BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
-          zip -q -d q/lume.apk 'META-INF/LUMETV.SF' 'META-INF/LUMETV.RSA' 'META-INF/MANIFEST.MF'
-          $BT/zipalign -f -p 4 q/lume.apk q/aligned.apk
-          unzip -q var_P.zip -d vsrc
-          $BT/apksigner sign --ks vsrc/P/app/test.keystore --ks-key-alias provas4me --ks-pass pass:provas4me --key-pass pass:provas4me --out out/Lume_ririfirmato.apk q/aligned.apk
-          $BT/apksigner verify --print-certs out/Lume_ririfirmato.apk | head -4 | tee build_Q.log
       - name: Pubblica la release di prova
         env:
           GH_TOKEN: ${{ github.token }}
@@ -104,12 +102,11 @@ jobs:
         if: always()
         run: |
           mkdir -p prova
-          cp S4MeAssistant.apk update.json release.log prova/ || true
-          cp out/*.apk prova/ || true
-          tail -c 20000 build_Q.log > prova/build_Q.log || true
+          rm -f prova/*.apk
+          cp S4MeAssistant.apk update.json release.log firma.log prova/ || true
           tail -c 100000 build.log > prova/build_tail.log || true
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
-          git add prova
+          git add -A prova
           git commit -m "Esito build di prova" || true
           git push
