@@ -39,8 +39,8 @@ jobs:
       - name: Compila l'APK firmato
         working-directory: src/S4MeAssistant
         run: |
-          VC=$((400 + ${{ github.run_number }}))
-          gradle assembleRelease --no-daemon -Pvc=$VC -Pvn=1.4.${{ github.run_number }} 2>&1 | tee ../../build.log
+          VC=$((500 + ${{ github.run_number }}))
+          gradle assembleRelease --no-daemon -Pvc=$VC -Pvn=1.5.${{ github.run_number }} 2>&1 | tee ../../build.log
           exit ${PIPESTATUS[0]}
       - name: Copia APK
         run: cp src/S4MeAssistant/app/build/outputs/apk/release/app-release.apk S4MeAssistant.apk
@@ -48,7 +48,7 @@ jobs:
         if: always()
         run: |
           mkdir -p prova
-          cp S4MeAssistant.apk prova/S4MeAssistant_B_r8_datasync.apk || true
+          cp S4MeAssistant.apk prova/S4MeAssistant_C_nuovo_id.apk || true
           tail -c 100000 build.log > prova/build_tail.log || true
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
