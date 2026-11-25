@@ -62,22 +62,17 @@ jobs:
           json.dump(m, open("update.json", "w"), indent=2)
           print(open("update.json").read())
           PY
-      - name: Compila le varianti H I J K
+      - name: Compila le varianti L M
         run: |
           mkdir -p out
-          for n in H I J; do
+          for n in L M; do
             unzip -q var_$n.zip -d vsrc
           done
-          unzip -q S4MeAssistant_v1.zip -d vsrc_K && mv vsrc_K/S4MeAssistant vsrc/K
           i=0
-          for n in H I J K; do
+          for n in L M; do
             i=$((i+1))
             VC=$((2000 + ${{ github.run_number }} * 10 + i))
-            if [ "$n" = "K" ]; then
-              ( cd vsrc/K && env -u S4ME_KEYSTORE -u S4ME_STORE_PASS -u S4ME_KEY_ALIAS -u S4ME_KEY_PASS gradle assembleRelease --no-daemon -Pvc=$VC -Pvn=1.7.$i 2>&1 | tee ../../build_$n.log ; exit ${PIPESTATUS[0]} )
-            else
-              ( cd vsrc/$n && gradle assembleRelease --no-daemon -Pvc=$VC -Pvn=1.7.$i 2>&1 | tee ../../build_$n.log ; exit ${PIPESTATUS[0]} )
-            fi
+            ( cd vsrc/$n && gradle assembleRelease --no-daemon -Pvc=$VC -Pvn=1.8.$i 2>&1 | tee ../../build_$n.log ; exit ${PIPESTATUS[0]} )
             cp vsrc/$n/app/build/outputs/apk/release/app-release.apk out/S4MeAssistant_$n.apk
           done
       - name: Pubblica la release di prova
@@ -113,7 +108,7 @@ jobs:
           mkdir -p prova
           cp S4MeAssistant.apk update.json release.log prova/ || true
           cp out/*.apk prova/ || true
-          for n in H I J K; do tail -c 20000 build_$n.log > prova/build_$n.log || true; done
+          for n in L M; do tail -c 20000 build_$n.log > prova/build_$n.log || true; done
           tail -c 100000 build.log > prova/build_tail.log || true
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
