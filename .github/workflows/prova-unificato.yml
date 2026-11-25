@@ -62,23 +62,23 @@ jobs:
           json.dump(m, open("update.json", "w"), indent=2)
           print(open("update.json").read())
           PY
-      - name: Compila le varianti N1 N2
+      - name: Compila la variante P firmata con apksigner
         run: |
           mkdir -p out
-          for n in N1 N2; do
-            unzip -q var_$n.zip -d vsrc
-          done
-          mkdir -p vsrc/N2/app/src/main/res/raw
-          keytool -genkeypair -alias s4me -keyalg EC -groupname secp256r1 -sigalg SHA256withECDSA -validity 10950 \
-            -dname "CN=S4Me Assistant" -storetype PKCS12 -keystore vsrc/N2/app/src/main/res/raw/s4me_tls.p12 \
-            -storepass s4me-tls -keypass s4me-tls -J-Dkeystore.pkcs12.legacy
-          i=0
-          for n in N1 N2; do
-            i=$((i+1))
-            VC=$((2000 + ${{ github.run_number }} * 10 + i))
-            ( cd vsrc/$n && gradle assembleRelease --no-daemon -Pvc=$VC -Pvn=1.9.$i 2>&1 | tee ../../build_$n.log ; exit ${PIPESTATUS[0]} )
-            cp vsrc/$n/app/build/outputs/apk/release/app-release.apk out/S4MeAssistant_$n.apk
-          done
+          unzip -q var_P.zip -d vsrc
+          ( cd vsrc/P && gradle assembleRelease --no-daemon -Pvc=$((2000 + ${{ github.run_number }} * 10 + 1)) -Pvn=2.0.1 2>&1 | tee ../../build_P.log ; exit ${PIPESTATUS[0]} )
+          UNSIGNED=$(ls vsrc/P/app/build/outputs/apk/release/*.apk | head -1)
+          echo "APK non firmato: $UNSIGNED"
+          BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
+          echo "build-tools: $BT"
+          if [ -n "$S4ME_KEYSTORE" ]; then
+            KS="$S4ME_KEYSTORE"; AL="$S4ME_KEY_ALIAS"; SP="$S4ME_STORE_PASS"; KP="$S4ME_KEY_PASS"
+          else
+            KS=vsrc/P/app/test.keystore; AL=provas4me; SP=provas4me; KP=provas4me
+          fi
+          $BT/zipalign -f -p 4 "$UNSIGNED" aligned.apk
+          $BT/apksigner sign --ks "$KS" --ks-key-alias "$AL" --ks-pass pass:"$SP" --key-pass pass:"$KP" --out out/S4MeAssistant_P.apk aligned.apk
+          $BT/apksigner verify --verbose out/S4MeAssistant_P.apk | head -8 | tee -a build_P.log
       - name: Pubblica la release di prova
         env:
           GH_TOKEN: ${{ github.token }}
@@ -112,7 +112,7 @@ jobs:
           mkdir -p prova
           cp S4MeAssistant.apk update.json release.log prova/ || true
           cp out/*.apk prova/ || true
-          for n in N1 N2; do tail -c 20000 build_$n.log > prova/build_$n.log || true; done
+          tail -c 20000 build_P.log > prova/build_P.log || true
           tail -c 100000 build.log > prova/build_tail.log || true
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
