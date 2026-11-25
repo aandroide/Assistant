@@ -1,6 +1,6 @@
 import re, shutil, sys, os
 base = sys.argv[1]          # cartella S4MeAssistant di partenza
-for name in "DEF":
+for name in "DG":
     dst = f"var_{name}"
     if os.path.exists(dst): shutil.rmtree(dst)
     shutil.copytree(base, dst)
@@ -11,6 +11,9 @@ for name in "DEF":
     if name == "E":
         s = s.replace('    <uses-permission android:name="android.permission.WAKE_LOCK" />\n', '')
         s = s.replace('    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />\n', '')
+    if name == "G":
+        s = s.replace('FOREGROUND_SERVICE_DATA_SYNC','FOREGROUND_SERVICE_SPECIAL_USE')
+        s = s.replace('android:foregroundServiceType="dataSync">\n        </service>','android:foregroundServiceType="specialUse">\n            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE" android:value="Server locale per risolvere le challenge Cloudflare per Kodi" />\n        </service>')
     open(man, "w").write(s)
     c = open(svc).read()
     if name == "E":

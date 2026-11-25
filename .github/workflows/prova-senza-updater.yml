@@ -36,12 +36,12 @@ jobs:
           else
             echo "Firma con la chiave di prova"
           fi
-      - name: Compila le varianti D E F
+      - name: Compila le varianti D G
         run: |
           python3 variants.py src/S4MeAssistant
           mkdir -p out
           i=0
-          for n in D E F; do
+          for n in D G; do
             i=$((i+1))
             VC=$((600 + ${{ github.run_number }} * 10 + i))
             ( cd var_$n && gradle assembleRelease --no-daemon -Pvc=$VC -Pvn=1.6.$i 2>&1 | tee ../build_$n.log ; exit ${PIPESTATUS[0]} )
@@ -52,7 +52,7 @@ jobs:
         run: |
           mkdir -p prova
           cp out/*.apk prova/ || true
-          for n in D E F; do tail -c 20000 build_$n.log > prova/build_$n.log || true; done
+          for n in D G; do tail -c 20000 build_$n.log > prova/build_$n.log || true; done
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
           git add prova
