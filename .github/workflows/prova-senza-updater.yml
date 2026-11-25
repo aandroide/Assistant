@@ -1,0 +1,57 @@
+name: Prova senza updater
+
+on:
+  push:
+    branches: [prova-senza-updater]
+    paths-ignore:
+      - 'prova/**'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: unzip -q S4MeAssistant_v1.zip -d src
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.2
+      - name: Chiave di firma
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KS_B64" ]; then
+            echo "$KS_B64" | base64 -d > "$RUNNER_TEMP/release.keystore"
+            echo "S4ME_KEYSTORE=$RUNNER_TEMP/release.keystore" >> "$GITHUB_ENV"
+            echo "S4ME_STORE_PASS=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> "$GITHUB_ENV"
+            echo "S4ME_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}" >> "$GITHUB_ENV"
+            echo "S4ME_KEY_PASS=${{ secrets.ANDROID_KEY_PASSWORD }}" >> "$GITHUB_ENV"
+            echo "Firma con la chiave dei secret"
+          else
+            echo "Firma con la chiave di prova"
+          fi
+      - name: Compila l'APK firmato
+        working-directory: src/S4MeAssistant
+        run: |
+          VC=$((200 + ${{ github.run_number }}))
+          gradle assembleRelease --no-daemon -Pvc=$VC -Pvn=1.2.${{ github.run_number }} 2>&1 | tee ../../build.log
+          exit ${PIPESTATUS[0]}
+      - name: Copia APK
+        run: cp src/S4MeAssistant/app/build/outputs/apk/release/app-release.apk S4MeAssistant.apk
+      - name: Salva APK e log nel ramo di prova
+        if: always()
+        run: |
+          mkdir -p prova
+          cp S4MeAssistant.apk prova/S4MeAssistant_senza_updater.apk || true
+          tail -c 100000 build.log > prova/build_tail.log || true
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add prova
+          git commit -m "Esito build di prova" || true
+          git push
