@@ -3,9 +3,9 @@ Daemon will be stopped at the end of the build
 Warning: SDK processing. This version only understands SDK XML versions up to 3 but an SDK XML file of version 4 was encountered. This can happen if you use versions of Android Studio and the command-line tools that were released at different times.
 > Task :app:preBuild UP-TO-DATE
 > Task :app:preReleaseBuild UP-TO-DATE
+> Task :app:javaPreCompileRelease
 > Task :app:checkReleaseAarMetadata
 > Task :app:generateReleaseResValues
-> Task :app:javaPreCompileRelease
 > Task :app:mapReleaseSourceSetPaths
 > Task :app:generateReleaseResources
 > Task :app:packageReleaseResources
@@ -26,10 +26,10 @@ Warning: SDK processing. This version only understands SDK XML versions up to 3 
 > Task :app:processReleaseJavaRes NO-SOURCE
 > Task :app:mergeReleaseShaders
 > Task :app:compileReleaseShaders NO-SOURCE
-> Task :app:generateReleaseAssets UP-TO-DATE
-> Task :app:mergeReleaseAssets
 > Task :app:processReleaseManifestForPackage
 > Task :app:mergeReleaseJavaResource
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseAssets
 > Task :app:compressReleaseAssets
 > Task :app:processApplicationManifestReleaseForBundle
 > Task :app:collectReleaseDependencies
@@ -57,7 +57,7 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:lintVitalReportRelease
 > Task :app:lintVitalRelease
 > Task :app:assembleRelease
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_3-1795645827364.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_3-1795646029380.json
 
-BUILD SUCCESSFUL in 26s
+BUILD SUCCESSFUL in 25s
 41 actionable tasks: 41 executed
