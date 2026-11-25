@@ -17,5 +17,5 @@ for name in "DEF":
         c = re.sub(r'PowerManager pm = .*?wifi\.acquire\(\);', '', c, flags=re.S)
         c = c.replace('if (wake != null && wake.isHeld()) wake.release();', '').replace('if (wifi != null && wifi.isHeld()) wifi.release();', '')
     if name == "F":
-        c = c.replace('http = new HttpServer(this, PORT);\n                http.start();', 'http = null;')
+        c = c.replace('http = new HttpServer(this, PORT);\n                http.start();', 'http = null; if (PORT < 0) throw new IOException("x");')
     open(svc, "w").write(c)
